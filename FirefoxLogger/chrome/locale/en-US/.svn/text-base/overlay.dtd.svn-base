@@ -1,9 +1,0 @@
-<!ENTITY UCIWebSearchLogger.label "Your localized menuitem">
-<!ENTITY UCIWebSearchLoggerContext.label "Your Menuitem">
-<!ENTITY UCIWebSearchLoggerContext.accesskey "Y">
-
-<!ENTITY UCIWebSearchLoggerToolbar.name  "example">
-<!ENTITY UCIWebSearchLoggerToolbar.label "This is an example toolbar. You can hide it under View &gt; toolbars &gt; &UCIWebSearchLoggerToolbar.name;">
-
-<!ENTITY UCIWebSearchLogger.ToolbarButton.label			"UCI Web-Search Logger Toolbar Button">
-<!ENTITY UCIWebSearchLogger.ToolbarButton.tooltip		"This is a toolbar button for controlling UCI Web-Search Logger">
