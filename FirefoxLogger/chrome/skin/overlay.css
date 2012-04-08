@@ -1,0 +1,76 @@
+/* This is just an example.  You shouldn't do this. */
+#UCIWebSearchLogger-hello
+{
+  color: red ! important;
+}
+
+div.UCIWebSearchLoggerMenu-Class	{ 
+	width: 100%; 
+	text-align:left;
+	padding:5px;
+}
+
+img.UCIWebSearchLoggerMenu-Class {
+	float: left;
+	padding-right:5px; 
+}
+
+#UCIWebSearchLoggerMenu-Header {
+	font-weight:bold; 
+	font-size: 1.1em;
+}
+
+span.UCIWebSearchLoggerMenu-Class {
+	font-weight:bold; 
+}
+
+/*from http://www.binarymoon.co.uk/demo/css3-button/ */
+button.UCIWebSearchLoggerMenu-Class {
+	font-family: arial, serif;
+	font-size: 0.8em;
+	color:#000;
+	text-decoration:none;
+	display:block;
+	width:99%;
+	padding:5px;
+	margin-top:5px;
+	border:1px solid #DDD;
+	text-align:center;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	-o-border-radius:5px;
+	border-radius:5px;
+	background:#FFFFFF;
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#EEE));
+	background:-moz-linear-gradient(0% 90% 90deg, #EEE, #FFF);
+	-webkit-transition: all .4s ease-in-out;
+	-moz-transition: all .4s ease-in-out;
+	-o-transition: all .4s ease-in-out;
+	transition: all .4s ease-in-out;
+}
+button.UCIWebSearchLoggerMenu-Class:hover {
+	color:#fff;
+	border-color:#3278BE;
+	background:#4195DD;
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#4195DD), to(#003C82));
+	background:-moz-linear-gradient(0% 90% 90deg, #003C82, #4195DD);
+}
+button.UCIWebSearchLoggerMenu-Class:active {
+	background:#4195DD;
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#003C82), to(#4195DD));
+	background:-moz-linear-gradient(0% 90% 90deg, #4195DD, #003C82);
+}
+button.UCIWebSearchLoggerMenu-Class.notransitions {
+	-webkit-transition: none;
+	-moz-transition: none;
+	-o-transition: none;
+	transition: none;
+}
+#UCIWebSearchLoggerMenu-status_ok {
+	color: green;
+	font-weight:normal;
+}
+#UCIWebSearchLoggerMenu-status_not_ok{
+	color: red;
+	font-weight:normal;
+}

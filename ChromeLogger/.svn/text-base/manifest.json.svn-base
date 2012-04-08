@@ -1,0 +1,39 @@
+{
+  "name": "UCI Web-Search Logger",
+  "version": "1.0",
+  "description": "\"UCI Web-Search Logger\" Chrome Extension will record the queries you enter in Google, StackOverflow, and Bing. It will also record the url of the search results you visit. It will ask you to submit your recorded searches to the researchers everyday. You can stop logging your searches at any time or you can delete searches you do not want to report before submitting your recorded searches.",
+  "background_page": "control_pages/background.html",
+  "browser_action": {
+    "default_icon": "logger.ico",
+    "default_title": "UCI Web-Search Logger",
+    "popup": "control_pages/popup.html"
+  },
+  "permissions": [
+	"http://*/*",
+	"https://*/*",
+	"unlimitedStorage",
+	"tabs"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+		"http://google.com/*",
+		"http://www.google.com/*",
+		"https://google.com/*",
+		"https://www.google.com/*",
+		"http://stackoverflow.com/*",
+		"http://www.bing.com/*",
+		"http://rad.ics.uci.edu/chromelogger/*"
+	  ],
+	  	  
+      "js": [
+		"js/include/jquery.min.js",
+		"js/include/urldecode.js",
+		"js/include/jquery.cookie.js",	//required by jstree
+		"js/include/jquery.jstree.js",
+		"js/main_inject.js"
+	  ]
+    }
+  ]
+}
+

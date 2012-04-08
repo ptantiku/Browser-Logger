@@ -1,0 +1,4 @@
+AuthUserFile "/home/sesweb/htdocs/rad/chromelogger/admin/.htpasswd"
+AuthType Basic
+AuthName "Password is Required"
+Require valid-user

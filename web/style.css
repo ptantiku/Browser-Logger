@@ -1,0 +1,92 @@
+.box {
+	text-align: justify;
+	width: 450px;
+	border-style: solid;
+	border-width: 0px;
+	border-color: black;
+	background-color: #FFFFDD;
+	padding: 15px;
+	/* from http://www.css3.info/preview/box-shadow/ */
+	-moz-box-shadow: 0 0 5px 5px #888;
+	-webkit-box-shadow: 0 0 5px 5px#888;
+	box-shadow: 0 0 5px 5px #888;
+}
+
+.loggertitle {
+		margin: 20px;
+		margin-bottom: 0;
+		color:#3333FF;
+		font-weight:bolder;
+		font-size: 30px;
+		text-align: center;
+	}
+
+.title {
+	margin: 20px;
+	margin-top: 0;
+	color:#4444FF;
+	font-weight:bold;
+	font-size: 30px;
+	text-align: center;
+}
+
+
+div.infodoc {
+	margin-left: auto;
+	margin-right: auto;
+	width: 600px;
+	text-align: justify;
+}
+
+/*from http://www.binarymoon.co.uk/demo/css3-button/ */
+.button, button {
+	font-family: arial, serif;
+	font-size:0.8em;
+	color:#000;
+	text-decoration:none;
+	display:inline-block;
+	padding:5px;
+	margin-top:15px;
+	margin-bottom:15px;
+	border:1px solid #DDD;
+	text-align:center;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	-o-border-radius:5px;
+	border-radius:5px;
+	background:#FFFFFF;
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#EEE));
+	background:-moz-linear-gradient(0% 90% 90deg, #EEE, #FFF);
+	-webkit-transition: all .4s ease-in-out;
+	-moz-transition: all .4s ease-in-out;
+	-o-transition: all .4s ease-in-out;
+	transition: all .4s ease-in-out;
+}
+.button:hover, button:hover {
+	color:#fff;
+	border-color:#3278BE;
+	background:#4195DD;
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#4195DD), to(#003C82));
+	background:-moz-linear-gradient(0% 90% 90deg, #003C82, #4195DD);
+}
+.button:active, button:active {
+	background:#4195DD;
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#003C82), to(#4195DD));
+	background:-moz-linear-gradient(0% 90% 90deg, #4195DD, #003C82);
+}
+.button.notransitions, button.notransitions  {
+	-webkit-transition: none;
+	-moz-transition: none;
+	-o-transition: none;
+	transition: none;
+}
+
+.center{
+	margin-left: auto;
+	margin-right: auto;
+	text-align:center;
+}
+
+.hidden {
+		display: none;
+}

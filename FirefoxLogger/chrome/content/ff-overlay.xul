@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://UCIWebSearchLogger/skin/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://UCIWebSearchLogger/skin/toolbar_button.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://UCIWebSearchLogger/locale/overlay.dtd">
+<overlay id="UCIWebSearchLogger-overlay"  xmlns:html="http://www.w3.org/1999/xhtml" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<script src="include/jquery-1.4.4.min.js"/>
+	<script src="include/urldecode.js"/>
+	<script src="include/jquery.cookie.js"/>
+	
+	
+	<script src="overlay.js"/>
+	<script src="ff-overlay.js"/>
+
+	<script src="background.js"/>
+	<script src="toolbarbutton.js"/>
+	<script src="main_inject.js"/>
+
+	<stringbundleset id="stringbundleset">
+		<stringbundle id="UCIWebSearchLogger-strings" src="chrome://UCIWebSearchLogger/locale/overlay.properties"/>
+	</stringbundleset>
+
+	<toolbarpalette id="BrowserToolbarPalette">
+		<toolbarbutton 
+			id="UCIWebSearchLogger-toolbar-button" 
+			class="toolbarbutton-1 chromeclass-toolbar-additional"
+			label="&UCIWebSearchLogger.ToolbarButton.label;" 	
+			tooltiptext="&UCIWebSearchLogger.ToolbarButton.tooltip;"
+			type="menu"
+			oncontextmenu=""
+			orient="horizontal">
+			<menupopup 
+				id="UCIWebSearchLogger-toolbar-menu" 
+				onpopupshowing="UCIWebSearchLoggerMenu.updateMenu();this.sizeTo(250,250);">
+				<html:div class="UCIWebSearchLoggerMenu-Class">
+					<html:img src="chrome://UCIWebSearchLogger/skin/logger_icon.png" class="UCIWebSearchLoggerMenu-Class"/>
+					<html:span id="UCIWebSearchLoggerMenu-Header">UCI Web-Search Logger</html:span>
+				</html:div>
+				<html:hr/>
+				<html:div id="UCIWebSearchLoggerMenu-nolog" class="UCIWebSearchLoggerMenu-Class">
+					<html:span class="UCIWebSearchLoggerMenu-Class">Status: </html:span>
+					<html:span id="UCIWebSearchLoggerMenu-status_not_ok">Not Logging </html:span>
+					<html:br/>
+					<html:button id="UCIWebSearchLoggerMenu-connect" class="UCIWebSearchLoggerMenu-Class" onclick="UCIWebSearchLoggerMenu.openNewUser()">Start Logging</html:button>
+				</html:div>
+				<html:div id="UCIWebSearchLoggerMenu-logging" class="UCIWebSearchLoggerMenu-Class">
+					<html:span class="UCIWebSearchLoggerMenu-Class">Participant ID: </html:span>
+					<html:span id="UCIWebSearchLoggerMenu-ParticipantID"></html:span>
+					<html:br/>	
+					<html:span class="UCIWebSearchLoggerMenu-Class">Status: </html:span>
+					<html:span id="UCIWebSearchLoggerMenu-status_ok">Logging Data ... </html:span>
+					<html:br/>
+					<html:button class="UCIWebSearchLoggerMenu-Class" onclick="UCIWebSearchLoggerMenu.openSubmitPage()">Review Logs</html:button>
+					<html:button class="UCIWebSearchLoggerMenu-Class" onclick="UCIWebSearchLoggerMenu.stopLogging()">Stop Logging</html:button>
+				</html:div>
+				<html:hr/>
+				<html:div class="UCIWebSearchLoggerMenu-Class">
+					<html:button class="UCIWebSearchLoggerMenu-Class" onclick="UCIWebSearchLoggerMenu.gotoAbout()">About Developers</html:button>
+					<html:button class="UCIWebSearchLoggerMenu-Class" onclick="UCIWebSearchLoggerMenu.gotoStudyInfo()">Study Information Sheet</html:button>
+				</html:div>
+			</menupopup>
+		</toolbarbutton>
+	</toolbarpalette>
+</overlay>

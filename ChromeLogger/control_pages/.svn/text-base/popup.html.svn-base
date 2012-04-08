@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<script src="../js/include/jquery.min.js"></script>
+<script>
+function openNewUser(){
+	chrome.windows.create({
+		url: "http://rad.ics.uci.edu/chromelogger/newuser.php",
+		type: "popup",
+		width: 300,
+		height: 300
+	});
+}
+
+function openSubmitPage(){
+	chrome.tabs.create({url: 'http://rad.ics.uci.edu/chromelogger/review.php', selected: true});
+}
+
+function stopLogging(){
+	chrome.extension.sendRequest({ command: "removeParticipantID" });
+	location.reload(true);
+}
+
+function gotoAbout(){
+	chrome.tabs.create({url: 'http://rad.ics.uci.edu/chromelogger/about.php', selected: true});
+}
+
+function gotoStudyInfo(){
+	chrome.tabs.create({url: 'http://rad.ics.uci.edu/chromelogger/studyinfo.php?ParticipantID='+$("#ParticipantID").text(), selected: true});
+}
+
+function update(){
+	//load ParticipantID from the extension
+	chrome.extension.sendRequest({
+		command: "getParticipantID"
+	}, function(response){
+		var ParticipantID = response;
+		if(ParticipantID==null) {
+			//alert("You don't have a valid Participant ID, Press OK, then enter Participant ID.");
+			$("#nolog").show();
+			$("#logging").hide();		
+		} else {
+			$("#nolog").hide();
+			$("#logging").show();
+			$("#ParticipantID").text(ParticipantID);
+		}
+	});
+}
+</script>
+<style type="text/css">
+body 	{ 
+		
+}
+div	{ 
+	width: 210px; 
+	text-align:left;
+}
+
+#logo 	{ 
+	float: left;
+	padding-right:5px; 
+}
+#header {
+
+	font-weight:bold; 
+	font-size: 1.1em;
+}
+.label {
+	font-weight:bold; 
+}
+
+/*from http://www.binarymoon.co.uk/demo/css3-button/ */
+button {
+	font-family: arial, serif;
+	font-size: 0.8em;
+	color:#000;
+	text-decoration:none;
+	display:block;
+	width:100%;
+	padding:5px;
+	margin-top:5px;
+	border:1px solid #DDD;
+	text-align:center;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	-o-border-radius:5px;
+	border-radius:5px;
+	background:#FFFFFF;
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#EEE));
+	background:-moz-linear-gradient(0% 90% 90deg, #EEE, #FFF);
+	-webkit-transition: all .4s ease-in-out;
+	-moz-transition: all .4s ease-in-out;
+	-o-transition: all .4s ease-in-out;
+	transition: all .4s ease-in-out;
+}
+button:hover {
+	color:#fff;
+	border-color:#3278BE;
+	background:#4195DD;
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#4195DD), to(#003C82));
+	background:-moz-linear-gradient(0% 90% 90deg, #003C82, #4195DD);
+}
+button:active {
+	background:#4195DD;
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#003C82), to(#4195DD));
+	background:-moz-linear-gradient(0% 90% 90deg, #4195DD, #003C82);
+}
+button.notransitions {
+	-webkit-transition: none;
+	-moz-transition: none;
+	-o-transition: none;
+	transition: none;
+}
+
+span.status_ok {
+	color: green;
+}
+span.status_not_ok{
+	color: red;
+}
+
+</style>
+<body onload="update();">
+	<img id="logo" src="../logger.png"/>
+	<span id="header">UCI Web-Search Logger</span>
+	<hr>
+	<div id="nolog">
+		<span class="label">Status: </span><span class="status_not_ok">Not Logging </span><br>
+		<button id="connect" onclick="openNewUser()">Start Logging</button>
+	</div>
+	<div id="logging">
+		<span class="label">Participant ID: </span><span id="ParticipantID"></span><br>	
+		<span class="label">Status: </span><span class="status_ok">Logging Data ... </span><br>
+		<button id="review" onclick="openSubmitPage()">Review Logs</button>
+		<button id="stop"   onclick="stopLogging()">Stop Logging</button>
+	</div>
+	<hr>
+	<div>
+		<button id="about"  onclick="gotoAbout()">About Developers</button>
+		<button id="studyinfo"  onclick="gotoStudyInfo()">Study Information Sheet</button>
+	</div>
+</body>
+</html>

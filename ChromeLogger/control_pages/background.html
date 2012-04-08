@@ -1,0 +1,278 @@
+﻿<html>
+<script src="../js/include/jquery.min.js"></script>
+<script type="text/javascript">
+	
+	//remind user to submit every 1 day
+	var submitInterval = 1000*60*60*24*1;
+	
+	debug = true;
+	function l(msg){ if(debug) console.log(msg); }
+
+	chrome.extension.onRequest.addListener(
+	  function(request, sender, sendResponse) {
+		if (request.command == "logQuery")
+			sendResponse(logQuery(request));
+		else if (request.command == "logClick")
+			logClick(request);
+		else if (request.command == "setParticipantID")
+			sendResponse(setParticipantID(request.ParticipantID));
+		else if (request.command == "getQueries")
+			sendResponse(getQueries());
+		else if (request.command == "getClicks")
+			sendResponse(getClicks());
+		else if (request.command == "getParticipantID")
+			sendResponse(getParticipantID());
+		else if (request.command == "getOldParticipantID")
+			sendResponse(getOldParticipantID());		
+		else if (request.command == "deleteQuery")
+			sendResponse(deleteQuery(request));
+		else if (request.command == "deleteClick")
+			sendResponse(deleteClick(request));
+		else if (request.command == "clearStorage")
+			clearStorage();
+		else if (request.command == "removeParticipantID")
+			sendResponse(removeParticipantID());
+		else if (request.command == "getLastSubmit")
+			sendResponse(getLastSubmit());
+		else if (request.command == "submitComplete")
+			submitComplete();
+	  }
+	);
+
+	//get all queries from LocalStorage
+	function getQueries(){
+		var queries = window.localStorage.getItem("queries");
+		if(queries) queries = JSON.parse(queries);
+		else queries = JSON.parse("[]");
+		
+		return queries;	
+	}
+
+	function saveChanges(queries){
+		window.localStorage.setItem("queries", JSON.stringify(queries));
+	}
+
+	//get all clicks from a specific query (JSON object)
+	function getClicks(query){
+		if(query && query.clicks) {
+			return query.clicks;
+		} else if(query){
+			query.clicks = JSON.parse("[]");
+			return query.clicks;
+		} else
+			return null; //error (input query is null)
+	}
+
+	//get all clicks from queries (JSON object array) giving a specific timestamp of a query
+	function getClicksByTimestamp(queries, timestamp){
+		query = findQueryByTimestamp(queries, timestamp);
+		return getClicks(query);
+	}
+	
+	//delete query by query's timestamp (only use in review page)
+	function deleteQuery(request){
+		var queries = getQueries();
+		if(!queries || queries.length==0) return;
+		//iterate from current to oldest to find the id 
+		for(var i=queries.length-1;i>=0;i--){
+			if(queries[i].timestamp==request.timestamp){
+				queries.splice(i,1);
+				window.localStorage.setItem("queries",JSON.stringify(queries));
+				return queries;
+			}
+		} 
+	}
+
+	//delete click by its timestamp and its query's timestamp (only use in review page)
+	function deleteClick(request){
+		var queries = getQueries();
+		var clicks = getClicksByTimestamp(queries, request.querytimestamp)
+		if(!clicks || clicks.length==0) return null;
+		//iterate from current to oldest to find the id 
+		for(var i=clicks.length-1;i>=0;i--){
+			if(clicks[i].timestamp==request.timestamp){
+				clicks.splice(i,1);
+				window.localStorage.setItem("queries",JSON.stringify(queries));
+				return queries;
+			}
+		} 
+
+	}
+
+	//search input "queries" (JSON object array) for a query (JSON object)
+	//that matches timestamp
+	function findQueryByTimestamp(queries, timestamp) {
+		for(var i=queries.length-1;i>=0;i--){
+			if(queries[i].timestamp==timestamp){
+				return queries[i];
+			}
+		} 
+		return null;
+	}
+	
+	//search input "queries" (JSON object array) for a query (JSON object)
+	//that matches "query" (string of search keywords)
+	function findPreviousSameQuery(queries,timestamp,site,query) {
+		//search for previous search on the same query
+		for(var i=queries.length-1;i>=0;i--){
+			if(queries[i].site == site 
+				&& queries[i].query == query) {
+				return queries[i];
+			}
+		}
+		return null;
+	}
+
+	//Log Query into LocalStorage
+	// if there is previous query with 
+	// same query string, use that query.
+	function logQuery(request){	
+		l("Log Query to LocalStorage");
+		//get queries
+		queries = getQueries();
+		//finding previous query
+		previousQuery = findPreviousSameQuery(queries, request.timestamp, request.site, request.query);
+		//if found a previous session
+		if(previousQuery!=null) {
+			return previousQuery.timestamp;
+		} else {
+			//put new query in and store the changes
+			queries.push({timestamp: request.timestamp, site: request.site, query: request.query});
+			saveChanges(queries);
+			return request.timestamp;
+		}
+	}
+	
+	//Log Click into LocalStorage
+	function logClick(request){
+		l("Log Click to LocalStorage");
+		
+		//get queries
+		queries = getQueries();
+		var clicks = getClicksByTimestamp(queries,request.querytimestamp);
+		if(clicks){
+			clicks.push({timestamp: request.timestamp, querytimestamp: request.querytimestamp, page: request.page, index: request.index, title: request.title, url: request.url, button: request.button});
+			saveChanges(queries);
+		}
+	}
+	
+	//get ParticipantID from localStorage
+	function getParticipantID(){
+		l("getParticipantID ACK");
+		return window.localStorage.getItem("ParticipantID");
+	}
+
+	//get previous participant's ID	
+	function getOldParticipantID(){
+		l("get old ParticipantID");
+		return window.localStorage.getItem("oldParticipantID");
+	}
+	
+	//set ParticipantID to localStorage
+	//If user is changed, delete logs of previous user.
+	function setParticipantID(ParticipantID){
+		window.localStorage.setItem("ParticipantID", ParticipantID);	
+		//retrieve previous ID
+		var oldParticipantID = getOldParticipantID(); 
+		//if change user, delete previous user's data
+		if(oldParticipantID==null || oldParticipantID!=ParticipantID){	
+			clearStorage();
+			window.localStorage.setItem("oldParticipantID", ParticipantID);
+		}
+		//else resume the old data
+		
+		//set lastTimeSubmit (if never submit before, as first time baseline)
+		if(getLastSubmit()==null || getLastSubmit()=="null"){
+			setLastSubmit();
+		}
+		
+		return { error: false };
+	}
+	
+	//
+	function removeParticipantID(){
+		l("remove ParticipantID");
+		var ParticipantID = getParticipantID();
+		if(ParticipantID==null || ParticipantID=="")	//if not getting ParticipantID
+			return {error: true};
+		
+		window.localStorage.setItem("oldParticipantID", ParticipantID); 	//for later resume
+		window.localStorage.removeItem("ParticipantID");
+	
+		return { error: false };
+	}
+
+	//get last submit time
+	function getLastSubmit(){
+		l("get last submitted time");
+		return window.localStorage.getItem("lastSubmit");
+	}
+
+	//set last submit time to current time
+	function setLastSubmit(){
+		l("set last submitted time to now");
+		var timestamp = new Date().getTime();
+		return window.localStorage.setItem("lastSubmit", timestamp);
+	}
+	
+	//Clear all logged data from computer
+	// still stores "ParticipantID", "oldParticipantID", "lastSubmit" ,if has any.
+	function clearStorage(){
+		l("clear log data from user's computer");
+		var ParticipantID = window.localStorage.getItem("ParticipantID");
+		var oldParticipantID = window.localStorage.getItem("oldParticipantID");
+		var lastSubmit = getLastSubmit();
+		window.localStorage.clear();
+		//keep current participant id and last submission time.
+		if(ParticipantID!=null && ParticipantID!=""){
+			window.localStorage.setItem("ParticipantID", ParticipantID);
+			window.localStorage.setItem("lastSubmit", lastSubmit);
+		}
+		//keep old participant id
+		if(oldParticipantID!=null && oldParticipantID!=""){
+			window.localStorage.setItem("oldParticipantID", oldParticipantID);
+		}
+	}
+
+	//Finishing logs submission by set "lastSubmit" time and clear logs
+	function submitComplete(){
+		setLastSubmit();
+		clearStorage();
+	}
+	
+	//Periodically reminds user to submit
+	function timeCheck(){
+		if(window.localStorage.getItem("ParticipantID")){
+			var cTimestamp = new Date().getTime();
+			var lTimestamp = window.localStorage.getItem("lastSubmit");
+			if(!lTimestamp) 
+				window.localStorage.setItem("lastSubmit", cTimestamp);
+
+			//var notifyTime = new Date(); //get today date
+			// notifyTime.setHours(5);  //set time to 5.00 AM
+			// notifyTime.setMinutes(0);
+			// notifyTime.setSeconds(0); 
+			// notifyTime = notifyTime.getTime(); //convert to EPOC
+			// if(cTimestamp - notifyTime > 0)  // if pass the due time, alert.
+
+			if(cTimestamp - lTimestamp > submitInterval)
+				chrome.tabs.create({
+					url: "http://rad.ics.uci.edu/chromelogger/pleasesubmit.php"
+				});
+
+		} else {
+			chrome.windows.create({
+				url: "http://rad.ics.uci.edu/chromelogger/newuser.php",
+				type: "popup",
+				width: 800,
+				height: 400
+			});
+
+		}
+	}
+
+	timeCheck();
+	setInterval("timeCheck()", submitInterval);
+
+</script>
+</html>

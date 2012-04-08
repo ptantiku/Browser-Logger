@@ -1,0 +1,9 @@
+content   UCIWebSearchLogger                 chrome/content/			contentaccessible=yes
+skin      UCIWebSearchLogger   classic/1.0   chrome/skin/
+locale    UCIWebSearchLogger   en-US         chrome/locale/en-US/
+
+
+overlay   chrome://browser/content/browser.xul   chrome://UCIWebSearchLogger/content/ff-overlay.xul
+style chrome://global/content/customizeToolbar.xul chrome://UCIWebSearchLogger/skin/overlay.css
+style chrome://global/content/customizeToolbar.xul chrome://UCIWebSearchLogger/skin/toolbar_button.css
+
