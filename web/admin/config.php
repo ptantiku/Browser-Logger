@@ -1,10 +1,10 @@
 <?php
 	//$CONFIG['db_host'] = "sylvester-mccoy-v2.ics.uci.edu";
-	$CONFIG['db_host'] = "hannibalv0";
+	$CONFIG['db_host'] = "XXXXXXXXXX";
 	$CONFIG['db_port'] = "3306";
-	$CONFIG['db_name'] = "pligg";
-	$CONFIG['db_user'] = "pligguser";
-	$CONFIG['db_pass'] = "EZYAu45eyhRRyuAH";
+	$CONFIG['db_name'] = "XXXXXXXXXX";
+	$CONFIG['db_user'] = "XXXXXXXXXX";
+	$CONFIG['db_pass'] = "XXXXXXXXXX";
 	$CONFIG['db_tb_participants'] = "logger_participants";
 	$CONFIG['db_tb_logquery'] = "logger_logquery";
 	$CONFIG['db_tb_logclick'] = "logger_logclick";
